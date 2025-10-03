@@ -1,3 +1,4 @@
+import { SignIn } from "@clerk/clerk-react";
 import { Star } from "lucide-react";
 import { assets } from "../assets/assets";
 
@@ -49,7 +50,9 @@ const Login = () => {
       </div>
       {/* Right Side: Login Form */}
 
-      <div className="flex flex-1 items-center justify-center p-6 sm:p-10"></div>
+      <div className="flex flex-1 items-center justify-center p-6 sm:p-10">
+        <SignIn />
+      </div>
     </div>
   );
 };
