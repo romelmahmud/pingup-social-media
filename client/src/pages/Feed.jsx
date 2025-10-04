@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { dummyPostsData } from "../assets/assets";
 import Loading from "../components/Loading";
+import StoriesBar from "../components/StoriesBar";
 
 const Feed = () => {
   const [feeds, setFeeds] = useState([]);
@@ -18,7 +19,7 @@ const Feed = () => {
       {/* Stories and Post list */}
       <div>
         {/* stories */}
-        <h1>Stories</h1>
+        <StoriesBar />
         {/* post list */}
         <div className="p-4 space-y-6">List of posts</div>
       </div>
