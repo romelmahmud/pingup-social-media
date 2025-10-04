@@ -1,4 +1,5 @@
-import { useNavigate } from "react-router-dom";
+import { CirclePlus } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 import MenuItems from "./MenuItems";
 
@@ -20,6 +21,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         />
         <hr className="border-gray-300 mb-8" />
         <MenuItems setSideBarOpen={setSidebarOpen} />
+        <Link
+          to="/create-post"
+          className="flex items-center justify-center gap-2 py-2.5 mt-6 mx-6 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-700 hover:to-purple-800 text-white active:scale-95 transition cursor-pointer"
+        >
+          <CirclePlus className="w-5 h-6" />
+          Create Post
+        </Link>
       </div>
     </div>
   );
