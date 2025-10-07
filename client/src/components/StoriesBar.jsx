@@ -3,6 +3,7 @@ import moment from "moment/moment";
 import { useEffect, useState } from "react";
 import { dummyStoriesData } from "../assets/assets";
 import StoryModal from "./StoryModal";
+import StoryViewerModal from "./StoryViewerModal";
 
 const StoriesBar = () => {
   const [stories, setStories] = useState([]);
@@ -37,6 +38,9 @@ const StoriesBar = () => {
         {stories.map((story, index) => (
           <div
             key={index}
+            onClick={() => {
+              setViewStory(story);
+            }}
             className={`relative rounded-lg shadow min-w-30 max-h-40 cursor-pointer hover:shadow-lg transition-all duration-200 bg-gradient-to-b from-indigo-500 to-purple-600 hover:from-indigo-700 hover:to-purple-800 active:scale-95`}
           >
             <img
@@ -72,6 +76,10 @@ const StoriesBar = () => {
       {/* Add story modal */}
       {showModal && (
         <StoryModal setShowModal={setShowModal} fetchStories={fetchStories} />
+      )}
+      {/* View Story modal */}
+      {viewStory && (
+        <StoryViewerModal viewStory={viewStory} setViewStory={setViewStory} />
       )}
     </div>
   );
