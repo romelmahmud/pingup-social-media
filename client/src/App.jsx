@@ -1,3 +1,4 @@
+import { Toaster } from "react-hot-toast";
 import { Route, Routes } from "react-router-dom";
 import ChatBox from "./pages/ChatBox";
 import Connections from "./pages/Connections";
@@ -15,6 +16,7 @@ const App = () => {
   const { user } = useUser();
   return (
     <>
+      <Toaster />
       <Routes>
         <Route path="/" element={!user ? <Login /> : <Layout />}>
           <Route index element={<Feed />} />
