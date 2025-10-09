@@ -1,4 +1,4 @@
-import { BadgeCheck, Dot } from "lucide-react";
+import { BadgeCheck } from "lucide-react";
 import moment from "moment";
 
 function PostCard({ post }) {
@@ -7,7 +7,7 @@ function PostCard({ post }) {
       {/* user info */}
       <div className="inline-flex items-center gap-3 cursor-pointer">
         <img
-          src={post.user.profile_picture}
+          src={post?.user?.profile_picture}
           alt=""
           className="w-10 h-10 rounded-full shadow"
         />
@@ -16,8 +16,8 @@ function PostCard({ post }) {
             <span>{post.user.full_name}</span>
             <BadgeCheck className="w-4 h-4 text-blue-500" />
           </div>
-          <div>
-            @{post.user.username} <Dot /> {moment(post.createdAt).fromNow()}
+          <div className="text-gray-400 text-sm">
+            @{post?.user?.username} . {moment(post?.createdAt).fromNow()}
           </div>
         </div>
       </div>
