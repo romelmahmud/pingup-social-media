@@ -1,4 +1,5 @@
-import { Verified } from "lucide-react";
+import { Calendar, MapPin, PenBox, Verified } from "lucide-react";
+import moment from "moment";
 
 const UserProfileInfo = ({ user, posts, profileId, setShowEdit }) => {
   return (
@@ -24,6 +25,30 @@ const UserProfileInfo = ({ user, posts, profileId, setShowEdit }) => {
                 {user.username ? `@${user.username}` : "Add a username"}
               </p>
             </div>
+            {/* if user is not on others profile that means he is opening his profile so we will give edit <button></button> */}
+            {!profileId && (
+              <button
+                onClick={() => setShowEdit(true)}
+                className="flex items-center gap-2 border border-gray-300 hover:bg-gray-50 px-4 py-2 rounded-lg font-medium transition-colors mt-4 md:mt-0 cursor-pointer"
+              >
+                <PenBox className="w-4 h-4" />
+                Edit
+              </button>
+            )}
+          </div>
+          <p className="text-gray-700 text-sm max-w-md mt-4">{user.bio}</p>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-500 mt-4">
+            <span className="flex items-center gap-1.5">
+              <MapPin className="w-4 h-4" />
+              {user.location ? user.location : "Add location"}
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Calendar className="w-4 h-4" />
+              Joined{" "}
+              <span className="font-medium">
+                {moment(user.createdAt).fromNow()}
+              </span>
+            </span>
           </div>
         </div>
       </div>
