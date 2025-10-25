@@ -2,7 +2,7 @@ import { Pencil } from "lucide-react";
 import { useState } from "react";
 import { dummyUserData } from "../assets/assets";
 
-const ProfileModal = () => {
+const ProfileModal = ({ setShowEdit }) => {
   const user = dummyUserData;
 
   const [editForm, setEditForm] = useState({
@@ -96,6 +96,109 @@ const ProfileModal = () => {
                   </div>
                 </div>
               </label>
+            </div>
+            {/* name */}
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                className="w-full p-3 border border-gray-200 rounded-lg"
+                placeholder="Please enter your full name"
+                onChange={(e) =>
+                  setEditForm({
+                    ...editForm,
+                    full_name: e.target.value,
+                  })
+                }
+                value={editForm.full_name}
+              />
+            </div>
+
+            {/* user_name */}
+            <div>
+              <label
+                htmlFor="user_name"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Username
+              </label>
+              <input
+                type="text"
+                id="user_name"
+                className="w-full p-3 border border-gray-200 rounded-lg"
+                placeholder="Please enter a username"
+                onChange={(e) =>
+                  setEditForm({
+                    ...editForm,
+                    username: e.target.value,
+                  })
+                }
+                value={editForm.username}
+              />
+            </div>
+            {/* bio */}
+            <div>
+              <label
+                htmlFor="bio"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Bio
+              </label>
+              <textarea
+                rows={3}
+                id="bio"
+                className="w-full p-3 border border-gray-200 rounded-lg"
+                placeholder="Please enter your bio"
+                onChange={(e) =>
+                  setEditForm({
+                    ...editForm,
+                    bio: e.target.value,
+                  })
+                }
+                value={editForm.bio}
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="location"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Location
+              </label>
+              <input
+                type="text"
+                id="location"
+                className="w-full p-3 border border-gray-200 rounded-lg"
+                placeholder="Please enter your location"
+                onChange={(e) =>
+                  setEditForm({
+                    ...editForm,
+                    location: e.target.value,
+                  })
+                }
+                value={editForm.location}
+              />
+            </div>
+            <div className="flex justify-end space-x-3 pt-6">
+              <button
+                type="button"
+                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
+                onClick={() => setShowEdit(false)}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 transition cursor-pointer"
+              >
+                Save Changes
+              </button>
             </div>
           </form>
         </div>
