@@ -11,6 +11,7 @@ const ProfileModal = () => {
     location: user.location,
     profile_picture: null,
     full_name: user.full_name,
+    cover_photo: null,
   });
 
   const handleSaveProfile = async (e) => {
@@ -55,6 +56,42 @@ const ProfileModal = () => {
                     className="w-24 h-24 rounded-full object-cover mt-2"
                   />
                   <div className="absolute hidden group-hover/profile:flex top-0 left-0 right-0 bottom-0 bg-black/20 rounded-full items-center justify-center cursor-pointer">
+                    <Pencil className="w-5 h-5 text-white" />
+                  </div>
+                </div>
+              </label>
+            </div>
+            {/* Cover Photo */}
+            <div className="flex flex-col items-start gap-3">
+              <label
+                htmlFor="cover_photo"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Cover Photo
+                <input
+                  type="file"
+                  accept="image/* "
+                  id="cover_photo"
+                  className="w-full p-3 border border-gray-200 rounded-lg"
+                  hidden
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      cover_photo: e.target.files[0],
+                    })
+                  }
+                />
+                <div className="group/cover relative">
+                  <img
+                    src={
+                      editForm.cover_photo
+                        ? URL.createObjectURL(editForm.cover_photo)
+                        : user.cover_photo
+                    }
+                    alt=""
+                    className="w-80 h-40 rounded-lg bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 object-cover mt-2"
+                  />
+                  <div className="absolute hidden group-hover/cover:flex top-0 left-0 right-0 bottom-0 bg-black/20 rounded-lg items-center justify-center cursor-pointer">
                     <Pencil className="w-5 h-5 text-white" />
                   </div>
                 </div>
