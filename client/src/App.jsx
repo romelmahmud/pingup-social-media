@@ -10,10 +10,17 @@ import Login from "./pages/Login";
 import Messages from "./pages/Messages";
 import Profile from "./pages/Profile";
 
-import { useUser } from "@clerk/clerk-react";
+import { useAuth, useUser } from "@clerk/clerk-react";
+import { useEffect } from "react";
 
 const App = () => {
   const { user } = useUser();
+  const { getToken } = useAuth();
+  useEffect(() => {
+    if (user) {
+      getToken().then((token) => console.log(token));
+    }
+  }, [user]);
   return (
     <>
       <Toaster />
