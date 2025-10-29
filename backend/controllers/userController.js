@@ -6,84 +6,124 @@ import User from "../models/User.js";
 export const updateUserData = async (req, res) => {
   try {
     const { userId } = req.auth();
-    const { username, bio, location, full_name } = req.body;
+    let { username, bio, location, full_name } = req.body || {};
+
     const tempUser = await User.findById(userId);
-    if (!tempUser) {
-      return res.json({
-        success: false,
-        message: "User not found",
-      });
-    }
-    !username && (username = tempUser.username);
+    if (!tempUser)
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+
+    if (!username) username = tempUser.username;
     if (tempUser.username !== username) {
-      const user = User.findOne({ username });
-      if (user) {
-        //we will not change the username if it is already taken
-        username = tempUser.username;
-      }
+      const userExists = await User.findOne({ username });
+      if (userExists) username = tempUser.username;
     }
+
     const updateData = {
-      username,
-      bio,
-      location,
-      full_name,
+      username: username || tempUser.username,
+      bio: bio || tempUser.bio,
+      location: location || tempUser.location,
+      full_name: full_name || tempUser.full_name,
     };
 
-    const profile = req.files.profile && req.files.profile[0];
-    const cover = req.files.cover && req.files.cover[0];
+    const profile = req.files?.profile?.[0];
+    const cover = req.files?.cover?.[0];
 
+    // Helper to upload a file (accepts Buffer or disk path)
+    const uploadToImageKit = async ({
+      fileBuffer,
+      filePath,
+      fileName,
+      folder,
+      transformationOpts,
+      extension,
+    }) => {
+      // If you have Buffer, convert to the SDK's file using toFile helper
+      let fileForUpload;
+      if (fileBuffer) {
+        // toFile returns an object compatible with client.files.upload()
+        fileForUpload = await toFile(fileBuffer, fileName);
+      } else if (filePath) {
+        // fs.createReadStream for disk path
+        fileForUpload = fs.createReadStream(filePath);
+      } else {
+        throw new Error("No file buffer or path provided for upload");
+      }
+
+      const uploadParams = {
+        file: fileForUpload,
+        fileName,
+        folder,
+        tags: ["user", "profile"], // optional
+        useUniqueFileName: true,
+        isPrivateFile: false,
+        // You can include other options here (customCoordinates, responseFields, etc.)
+      };
+
+      const response = await imagekit.files.upload(uploadParams);
+      // response usually contains url and filePath; you can use response.url or generate dynamic URL with helper
+      const finalUrl =
+        response.url ||
+        imagekit.helper.buildSrc({
+          urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT,
+          src: response.filePath,
+          transformation: transformationOpts,
+        });
+
+      return { response, finalUrl };
+    };
+
+    // Upload profile (prefer buffer if using memoryStorage)
     if (profile) {
-      const buffer = fs.readFileSync(profile.path);
-      const response = await imagekit.upload({
-        file: buffer,
-        fileName: profile.originalname,
+      const fileBuffer = profile.buffer ?? null;
+      const filePath = profile.path ?? null; // diskStorage
+      const fileName = profile.originalname ?? `profile-${Date.now()}`;
+
+      const { finalUrl } = await uploadToImageKit({
+        fileBuffer,
+        filePath,
+        fileName,
         folder: "/users/profile",
-      });
-      const url = imagekit.url({
-        path: response.filePath,
-        transformation: [
-          {
-            quality: "auto",
-          },
-          {
-            format: "webp",
-          },
-          {
-            width: 512,
-          },
+        transformationOpts: [
+          { quality: "auto" },
+          { format: "webp" },
+          { width: 512 },
         ],
       });
-      updateData.profile_picture = url;
+
+      updateData.profile_picture = finalUrl;
     }
 
+    // Upload cover
     if (cover) {
-      const buffer = fs.readFileSync(cover.path);
-      const response = await imagekit.upload({
-        file: buffer,
-        fileName: cover1``.originalname,
+      const fileBuffer = cover.buffer ?? null;
+      const filePath = cover.path ?? null;
+      const fileName = cover.originalname ?? `cover-${Date.now()}`;
+
+      const { finalUrl } = await uploadToImageKit({
+        fileBuffer,
+        filePath,
+        fileName,
         folder: "/users/cover",
-      });
-      const url = imagekit.url({
-        path: response.filePath,
-        transformation: [
-          {
-            quality: "auto",
-          },
-          {
-            format: "webp",
-          },
-          {
-            width: 1280,
-          },
+        transformationOpts: [
+          { quality: "auto" },
+          { format: "webp" },
+          { width: 1280 },
         ],
       });
-      updateData.cover_photo = url;
+
+      updateData.cover_photo = finalUrl;
     }
+
     const user = await User.findByIdAndUpdate(userId, updateData, {
       new: true,
     });
-
-    res.json({ success: true, user, message: "Profile Updated successfully" });
+    return res.json({
+      success: true,
+      user,
+      message: "Profile updated successfully",
+    });
   } catch (error) {
     console.log(error);
     res.json({
