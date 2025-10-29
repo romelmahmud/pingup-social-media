@@ -1,8 +1,8 @@
 import fs from "fs";
 import imagekit from "../config/imageKit.js";
 import User from "../models/User.js";
-// update user data using userId
 
+// update user data using userId
 export const updateUserData = async (req, res) => {
   try {
     const { userId } = req.auth();
@@ -95,7 +95,7 @@ export const updateUserData = async (req, res) => {
 
 // get user data using userId
 
-export const getUserId = async (req, res) => {
+export const getUserData = async (req, res) => {
   try {
     const { userId } = req.auth();
     const user = await User.findById(userId);
